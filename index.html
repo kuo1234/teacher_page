@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教師管理系統</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .top-nav {
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #1d4ed8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .side-menu-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 40;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .side-menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-menu {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 256px;
+            background-color: white;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .side-menu-overlay.active .side-menu {
+            transform: translateX(0);
+        }
+
+        .side-menu-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .side-menu-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .side-menu-avatar {
+            width: 48px;
+            height: 48px;
+            background-color: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .side-menu-nav {
+            padding: 8px;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            color: #374151;
+        }
+
+        .nav-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .nav-item.active {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .content {
+            padding-bottom: 80px;
+        }
+
+        .page {
+            padding: 16px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #059669;
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #e5e7eb;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 8px 16px;
+        }
+
+        .bottom-nav-items {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .bottom-nav-item.active {
+            color: #2563eb;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-sm {
+            font-size: 14px;
+        }
+
+        .text-xs {
+            font-size: 12px;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-gray-600 {
+            color: #4b5563;
+        }
+
+        .text-gray-500 {
+            color: #6b7280;
+        }
+
+        .course-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+        }
+
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-ended {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .course-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .flex-1 {
+            flex: 1;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        .icon-lg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <button class="menu-btn" onclick="toggleMenu()">
+            <span class="icon-lg">☰</span>
+        </button>
+        <h1 style="font-size: 18px; font-weight: 600;">教師管理系統</h1>
+        <div class="user-avatar">
+            <span class="icon">👤</span>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu-overlay" id="sideMenu" onclick="closeMenu(event)">
+        <div class="side-menu">
+            <div class="side-menu-header">
+                <div class="side-menu-profile">
+                    <div class="side-menu-avatar">
+                        <span>👤</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold">張老師</p>
+                        <p class="text-sm text-gray-600">數學專業教師</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="side-menu-nav">
+                <button class="nav-item active" onclick="showPage('profile')">
+                    <span class="icon-lg">👤</span>
+                    <span>個人資料</span>
+                    <span style="margin-left: auto;">›</span>
+                </button>
+                <button class="nav-item" onclick="showPage('courses')">
+                    <span class="icon-lg">📚</span>
+                    <span>課程管理</span>
+                    <span style="margin-left: auto;">›</span>
+                </button>
+                <button class="nav-item" onclick="showPage('students')">
+                    <span class="icon-lg">👥</span>
+                    <span>學生管理</span>
+                    <span style="margin-left: auto;">›</span>
+                </button>
+                <button class="nav-item" onclick="showPage('finance')">
+                    <span class="icon-lg">💰</span>
+                    <span>財務管理</span>
+                    <span style="margin-left: auto;">›</span>
+                </button>
+                <button class="nav-item" onclick="showPage('settings')">
+                    <span class="icon-lg">⚙️</span>
+                    <span>設定</span>
+                    <span style="margin-left: auto;">›</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Profile Page -->
+        <div id="profilePage" class="page">
+            <div id="profileView">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 style="font-size: 20px; font-weight: bold;">個人資料</h2>
+                        <button class="btn btn-primary" onclick="showRegistration()">
+                            <span class="icon">✏️</span>
+                            編輯
+                        </button>
+                    </div>
+
+                    <div class="text-center" style="margin-bottom: 16px;">
+                        <div class="profile-avatar">
+                            <span style="font-size: 32px;">👤</span>
+                        </div>
+                        <h3 class="font-semibold" style="font-size: 18px;">張老師</h3>
+                        <p class="text-gray-600 text-sm">Teacher Zhang</p>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div class="info-item">
+                            <span class="icon text-gray-500">📅</span>
+                            <div>
+                                <p class="text-sm text-gray-600">出生年月日</p>
+                                <p class="font-semibold">1985/03/15</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="icon text-gray-500">✉️</span>
+                            <div>
+                                <p class="text-sm text-gray-600">Email</p>
+                                <p class="font-semibold">zhang.teacher@email.com</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="icon text-gray-500">📞</span>
+                            <div>
+                                <p class="text-sm text-gray-600">聯繫電話</p>
+                                <p class="font-semibold">0912-345-678</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 12px; background-color: #eff6ff; border-radius: 8px;">
+                        <h4 class="font-semibold" style="margin-bottom: 8px;">教學專長</h4>
+                        <p class="text-sm text-gray-600">高中數學教學經驗10年，專精微積分、統計學，多益990分認證</p>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <span class="badge badge-success">已驗證</span>
+                        <span class="badge badge-info">合作商</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registrationView" class="hidden">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 style="font-size: 20px; font-weight: bold;">身份註冊</h2>
+                        <button onclick="hideRegistration()" style="background: none; border: none; color: #6b7280; cursor: pointer;">
+                            <span style="font-size: 20px;">×</span>
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">中文姓名 *</label>
+                        <input type="text" class="form-input" placeholder="請輸入中文姓名">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">英文姓名 / 藝名</label>
+                        <input type="text" class="form-input" placeholder="請輸入英文姓名或藝名">
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">出生年月日 *</label>
+                            <input type="date" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">性別 *</label>
+                            <select class="form-input">
+                                <option>請選擇</option>
+                                <option>男</option>
+                                <option>女</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" placeholder="example@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">聯繫電話 *</label>
+                        <input type="tel" class="form-input" placeholder="0912-345-678">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">大頭貼</label>
+                        <div class="upload-area">
+                            <span style="font-size: 24px; margin-bottom: 8px; display: block;">📷</span>
+                            <p class="text-sm">點擊上傳照片</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; padding: 16px;">
+                    <button class="btn btn-outline flex-1" onclick="hideRegistration()">取消</button>
+                    <button class="btn btn-primary flex-1">提交申請</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Page -->
+        <div id="coursesPage" class="page hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="font-size: 20px; font-weight: bold;">課程管理</h2>
+                <button class="btn btn-success">
+                    <span class="icon">+</span>
+                    開課
+                </button>
+            </div>
+
+            <div class="course-item">
+                <div class="course-header">
+                    <h3 class="font-semibold" style="font-size: 18px;">高中數學精修班</h3>
+                    <span class="status-badge status-active">已上架</span>
+                </div>
+                <div class="course-stats">
+                    <div>
+                        <p class="text-gray-600">學生數</p>
+                        <p class="font-semibold">8/12</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">價格</p>
+                        <p class="font-semibold">NT$ 2000</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">地點</p>
+                        <p class="font-semibold text-xs">台北市信義區</p>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-outline flex-1">
+                        <span class="icon">👁️</span>
+                        查看
+                    </button>
+                    <button class="btn btn-primary flex-1">
+                        <span class="icon">✏️</span>
+                        編輯
+                    </button>
+                </div>
+            </div>
+
+            <div class="course-item">
+                <div class="course-header">
+                    <h3 class="font-semibold" style="font-size: 18px;">國中數學基礎班</h3>
+                    <span class="status-badge status-pending">審核中</span>
+                </div>
+                <div class="course-stats">
+                    <div>
+                        <p class="text-gray-600">學生數</p>
+                        <p class="font-semibold">0/10</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">價格</p>
+                        <p class="font-semibold">NT$ 1500</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">地點</p>
+                        <p class="font-semibold text-xs">台北市大安區</p>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-outline flex-1">
+                        <span class="icon">👁️</span>
+                        查看
+                    </button>
+                    <button class="btn btn-primary flex-1">
+                        <span class="icon">✏️</span>
+                        編輯
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Page -->
+        <div id="studentsPage" class="page hidden">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">學生管理</h2>
+
+            <div class="card">
+                <h3 class="font-semibold" style="margin-bottom: 12px;">報名學員</h3>
+                <div class="student-item">
+                    <div class="student-avatar">W</div>
+                    <div class="flex-1">
+                        <p class="font-semibold">王小明</p>
+                        <p class="text-sm text-gray-600">高中數學精修班</p>
+                    </div>
+                    <span class="badge badge-success">已繳費</span>
+                </div>
+                <div class="student-item">
+                    <div class="student-avatar">L</div>
+                    <div class="flex-1">
+                        <p class="font-semibold">李小華</p>
+                        <p class="text-sm text-gray-600">高中數學精修班</p>
+                    </div>
+                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background-color: #fee2e2; color: #991b1b;">未繳費</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finance Page -->
+        <div id="financePage" class="page hidden">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">財務管理</h2>
+
+            <div style="background: linear-gradient(to right, #3b82f6, #2563eb); color: white; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <p class="text-sm" style="opacity: 0.9;">本月總收入</p>
+                <p style="font-size: 24px; font-weight: bold;">NT$ 45,000</p>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 16px;">
+                <div style="background-color: #f0fdf4; padding: 16px; border-radius: 8px;">
+                    <p class="text-sm" style="color: #15803d;">已結算</p>
+                    <p style="font-size: 18px; font-weight: bold; color: #059669;">NT$ 31,500</p>
+                </div>
+                <div style="background-color: #fffbeb; padding: 16px; border-radius: 8px;">
+                    <p class="text-sm" style="color: #a16207;">待結算</p>
+                    <p style="font-size: 18px; font-weight: bold; color: #d97706;">NT$ 13,500</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page hidden">
+            <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 16px;">設定</h2>
+            <div class="card">
+                <p>設定頁面內容</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-items">
+            <button class="bottom-nav-item active" onclick="showPage('profile')">
+                <span class="icon-lg">👤</span>
+                <span class="text-xs">個人資料</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showPage('courses')">
+                <span class="icon-lg">📚</span>
+                <span class="text-xs">課程管理</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showPage('students')">
+                <span class="icon-lg">👥</span>
+                <span class="text-xs">學生管理</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showPage('finance')">
+                <span class="icon-lg">💰</span>
+                <span class="text-xs">財務管理</span>
+            </button>
+            <button class="bottom-nav-item" onclick="showPage('settings')">
+                <span class="icon-lg">⚙️</span>
+                <span class="text-xs">設定</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 'profile';
+
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('active');
+        }
+
+        function closeMenu(event) {
+            if (event.target === event.currentTarget) {
+                const menu = document.getElementById('sideMenu');
+                menu.classList.remove('active');
+            }
+        }
+
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = ['profilePage', 'coursesPage', 'studentsPage', 'financePage', 'settingsPage'];
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+
+            // Show selected page
+            document.getElementById(pageId + 'Page').classList.remove('hidden');
+
+            // Update navigation states
+            updateNavigation(pageId);
+
+            // Close side menu
+            document.getElementById('sideMenu').classList.remove('active');
+
+            currentPage = pageId;
+        }
+
+        function updateNavigation(activePageId) {
+            // Update side menu
+            const sideNavItems = document.querySelectorAll('.nav-item');
+            sideNavItems.forEach((item, index) => {
+                const pages = ['profile', 'courses', 'students', 'finance', 'settings'];
+                if (pages[index] === activePageId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Update bottom navigation
+            const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+            bottomNavItems.forEach((item, index) => {
+                const pages = ['profile', 'courses', 'students', 'finance', 'settings'];
+                if (pages[index] === activePageId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function showRegistration() {
+            document.getElementById('profileView').classList.add('hidden');
+            document.getElementById('registrationView').classList.remove('hidden');
+        }
+
+        function hideRegistration() {
+            document.getElementById('profileView').classList.remove('hidden');
+            document.getElementById('registrationView').classList.add('hidden');
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('profile');
+        });
+    </script>
+</body>
+</html>
