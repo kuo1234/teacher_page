@@ -404,6 +404,157 @@
             width: 20px;
             height: 20px;
         }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            font-weight: 500;
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .table td {
+            font-size: 14px;
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .verification-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .verification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .required-badge {
+            color: #ef4444;
+            font-size: 12px;
+        }
+
+        .chart-container {
+            height: 200px;
+            margin-bottom: 16px;
+            position: relative;
+            padding: 16px 0;
+        }
+
+        .chart-bar {
+            position: relative;
+            height: 24px;
+            background-color: #3b82f6;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+        }
+
+        .chart-label {
+            position: absolute;
+            left: 0;
+            top: -20px;
+            font-size: 12px;
+            color: #4b5563;
+        }
+
+        .chart-value {
+            position: absolute;
+            right: 0;
+            top: -20px;
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .modal-footer {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
@@ -520,6 +671,58 @@
                         <span class="badge badge-info">合作商</span>
                     </div>
                 </div>
+
+                <!-- 身份驗證狀態 -->
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 12px;">身份驗證狀態</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>身分證</span>
+                            <span style="color: #059669;">✓ 已驗證</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>良民證</span>
+                            <span style="color: #059669;">✓ 已驗證</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>畢業證書</span>
+                            <span style="color: #059669;">✓ 已驗證</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>指定動作拍照</span>
+                            <span style="color: #059669;">✓ 已驗證</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>相關證照</span>
+                            <span style="color: #059669;">✓ 已驗證</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 銀行帳號設定 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="font-semibold">銀行帳號設定</h3>
+                        <button class="btn btn-outline" onclick="showBankModal()">
+                            <span class="icon">✏️</span>
+                            編輯
+                        </button>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>銀行名稱</span>
+                            <span class="font-semibold">中國信託</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>帳號</span>
+                            <span class="font-semibold">123-456-789012</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background-color: #f9fafb; border-radius: 8px;">
+                            <span>戶名</span>
+                            <span class="font-semibold">張老師</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Registration Form -->
@@ -534,24 +737,24 @@
 
                     <div class="form-group">
                         <label class="form-label">中文姓名 *</label>
-                        <input type="text" class="form-input" placeholder="請輸入中文姓名">
+                        <input type="text" class="form-input" placeholder="請輸入中文姓名" value="張老師">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">英文姓名 / 藝名</label>
-                        <input type="text" class="form-input" placeholder="請輸入英文姓名或藝名">
+                        <input type="text" class="form-input" placeholder="請輸入英文姓名或藝名" value="Teacher Zhang">
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
                             <label class="form-label">出生年月日 *</label>
-                            <input type="date" class="form-input">
+                            <input type="date" class="form-input" value="1985-03-15">
                         </div>
                         <div class="form-group">
                             <label class="form-label">性別 *</label>
                             <select class="form-input">
                                 <option>請選擇</option>
-                                <option>男</option>
+                                <option selected>男</option>
                                 <option>女</option>
                             </select>
                         </div>
@@ -559,12 +762,17 @@
 
                     <div class="form-group">
                         <label class="form-label">Email *</label>
-                        <input type="email" class="form-input" placeholder="example@email.com">
+                        <input type="email" class="form-input" placeholder="example@email.com" value="zhang.teacher@email.com">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">聯繫電話 *</label>
-                        <input type="tel" class="form-input" placeholder="0912-345-678">
+                        <input type="tel" class="form-input" placeholder="0912-345-678" value="0912-345-678">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">學歷 *</label>
+                        <input type="text" class="form-input" placeholder="請輸入最高學歷" value="國立台灣大學數學系">
                     </div>
 
                     <div class="form-group">
@@ -572,6 +780,115 @@
                         <div class="upload-area">
                             <span style="font-size: 24px; margin-bottom: 8px; display: block;">📷</span>
                             <p class="text-sm">點擊上傳照片</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">教學專長及履歷</label>
+                        <textarea class="form-input" style="height: 100px;" placeholder="請詳細描述您的教學專長...">高中數學教學經驗10年，專精微積分、統計學，多益990分認證</textarea>
+                    </div>
+                </div>
+
+                <!-- 身份驗證文件 -->
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 16px;">身份驗證文件</h3>
+                    <div class="space-y-3">
+                        <div class="verification-item">
+                            <div class="verification-header">
+                                <span class="text-sm font-semibold">身分證</span>
+                                <span class="required-badge">必填</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;">
+                                <span class="icon">📤</span>
+                                選擇檔案
+                            </button>
+                            <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                        </div>
+                        
+                        <div class="verification-item">
+                            <div class="verification-header">
+                                <span class="text-sm font-semibold">良民證（一個月內）</span>
+                                <span class="required-badge">必填</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;">
+                                <span class="icon">📤</span>
+                                選擇檔案
+                            </button>
+                            <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                        </div>
+                        
+                        <div class="verification-item">
+                            <div class="verification-header">
+                                <span class="text-sm font-semibold">畢業證書或學生證</span>
+                                <span class="required-badge">必填</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;">
+                                <span class="icon">📤</span>
+                                選擇檔案
+                            </button>
+                            <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                        </div>
+                        
+                        <div class="verification-item">
+                            <div class="verification-header">
+                                <span class="text-sm font-semibold">指定動作拍照</span>
+                                <span class="required-badge">必填</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;">
+                                <span class="icon">📤</span>
+                                選擇檔案
+                            </button>
+                            <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                        </div>
+                        
+                        <div class="verification-item">
+                            <div class="verification-header">
+                                <span class="text-sm font-semibold">相關證照</span>
+                            </div>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 8px;">
+                                <span class="icon">📤</span>
+                                選擇檔案
+                            </button>
+                            <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 銀行帳號設定 -->
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 16px;">銀行帳號設定</h3>
+                    <div class="space-y-3">
+                        <select class="form-input">
+                            <option>選擇銀行</option>
+                            <option selected>中國信託</option>
+                            <option>富邦銀行</option>
+                            <option>玉山銀行</option>
+                        </select>
+                        <input type="text" class="form-input" placeholder="請輸入帳號" value="123-456-789012">
+                        <input type="text" class="form-input" placeholder="請輸入戶名" value="張老師">
+                        <button class="btn btn-outline" style="width: 100%;">
+                            <span class="icon">📤</span>
+                            上傳戶頭影本
+                        </button>
+                        <div style="margin-top: 8px; font-size: 12px; color: #059669;">已上傳</div>
+                    </div>
+                </div>
+
+                <!-- 分潤模組設定 -->
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 16px;">分潤模組設定</h3>
+                    <div class="grid-3">
+                        <div>
+                            <label class="text-xs text-gray-600" style="margin-bottom: 4px; display: block;">老師 (%)</label>
+                            <input type="number" class="form-input" style="text-align: center;" value="70">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-600" style="margin-bottom: 4px; display: block;">機構 (%)</label>
+                            <input type="number" class="form-input" style="text-align: center;" value="20">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-600" style="margin-bottom: 4px; display: block;">場地 (%)</label>
+                            <input type="number" class="form-input" style="text-align: center;" value="10">
                         </div>
                     </div>
                 </div>
@@ -587,7 +904,7 @@
         <div id="coursesPage" class="page hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <h2 style="font-size: 20px; font-weight: bold;">課程管理</h2>
-                <button class="btn btn-success">
+                <button class="btn btn-success" onclick="showCourseModal()">
                     <span class="icon">+</span>
                     開課
                 </button>
@@ -617,7 +934,7 @@
                         <span class="icon">👁️</span>
                         查看
                     </button>
-                    <button class="btn btn-primary flex-1">
+                    <button class="btn btn-primary flex-1" onclick="showCourseEditModal('高中數學精修班')">
                         <span class="icon">✏️</span>
                         編輯
                     </button>
@@ -648,11 +965,51 @@
                         <span class="icon">👁️</span>
                         查看
                     </button>
-                    <button class="btn btn-primary flex-1">
+                    <button class="btn btn-primary flex-1" onclick="showCourseEditModal('國中數學基礎班')">
                         <span class="icon">✏️</span>
                         編輯
                     </button>
                 </div>
+            </div>
+
+            <div class="course-item">
+                <div class="course-header">
+                    <h3 class="font-semibold" style="font-size: 18px;">小學數學啟蒙</h3>
+                    <span class="status-badge status-ended">已結束</span>
+                </div>
+                <div class="course-stats">
+                    <div>
+                        <p class="text-gray-600">學生數</p>
+                        <p class="font-semibold">10/10</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">價格</p>
+                        <p class="font-semibold">NT$ 1200</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">地點</p>
+                        <p class="font-semibold text-xs">線上課程</p>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-outline flex-1">
+                        <span class="icon">👁️</span>
+                        查看
+                    </button>
+                    <button class="btn btn-primary flex-1" onclick="showCourseEditModal('小學數學啟蒙')">
+                        <span class="icon">✏️</span>
+                        編輯
+                    </button>
+                </div>
+            </div>
+
+            <div style="background-color: #eff6ff; padding: 16px; border-radius: 8px;">
+                <h3 class="font-semibold" style="margin-bottom: 8px;">課程設定提醒</h3>
+                <ul style="font-size: 14px; color: #4b5563;">
+                    <li style="margin-bottom: 4px;">• 線上課程：1對1到1對4</li>
+                    <li style="margin-bottom: 4px;">• 線下團體班：最少2人開課</li>
+                    <li>• 不提供線下私人家教</li>
+                </ul>
             </div>
         </div>
 
@@ -700,6 +1057,191 @@
                     <p style="font-size: 18px; font-weight: bold; color: #d97706;">NT$ 13,500</p>
                 </div>
             </div>
+
+            <!-- 財務報表標籤 -->
+            <div class="tab-container">
+                <div class="tab active" onclick="showTab('incomeTab')">課程收入報表</div>
+                <div class="tab" onclick="showTab('settlementTab')">分潤結算報表</div>
+            </div>
+
+            <!-- 課程收入報表 -->
+            <div id="incomeTab" class="tab-content active">
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 12px;">當月開課收入報表</h3>
+                    
+                    <div class="chart-container">
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 80%;">
+                                高中數學精修班
+                            </div>
+                            <div class="chart-label">高中數學精修班</div>
+                            <div class="chart-value">NT$ 16,000</div>
+                        </div>
+                        
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 75%;">
+                                國中數學基礎班
+                            </div>
+                            <div class="chart-label">國中數學基礎班</div>
+                            <div class="chart-value">NT$ 15,000</div>
+                        </div>
+                        
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 70%;">
+                                小學數學啟蒙
+                            </div>
+                            <div class="chart-label">小學數學啟蒙</div>
+                            <div class="chart-value">NT$ 14,000</div>
+                        </div>
+                    </div>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>課程名稱</th>
+                                <th>學生數</th>
+                                <th>單價</th>
+                                <th>總收入</th>
+                                <th>狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>高中數學精修班</td>
+                                <td>8</td>
+                                <td>NT$ 2,000</td>
+                                <td>NT$ 16,000</td>
+                                <td><span style="color: #059669;">已結算</span></td>
+                            </tr>
+                            <tr>
+                                <td>國中數學基礎班</td>
+                                <td>10</td>
+                                <td>NT$ 1,500</td>
+                                <td>NT$ 15,000</td>
+                                <td><span style="color: #059669;">已結算</span></td>
+                            </tr>
+                            <tr>
+                                <td>小學數學啟蒙</td>
+                                <td>12</td>
+                                <td>NT$ 1,200</td>
+                                <td>NT$ 14,000</td>
+                                <td><span style="color: #d97706;">待結算</span></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: 500;">總計</td>
+                                <td colspan="2" style="font-weight: bold;">NT$ 45,000</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 分潤結算報表 -->
+            <div id="settlementTab" class="tab-content">
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 12px;">每月結算分潤金額報表</h3>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label class="form-label">選擇月份</label>
+                        <select class="form-input">
+                            <option>2023年12月</option>
+                            <option>2023年11月</option>
+                            <option selected>2023年10月</option>
+                            <option>2023年9月</option>
+                        </select>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 70%; background-color: #3b82f6;">
+                                老師分潤
+                            </div>
+                            <div class="chart-label">老師分潤 (70%)</div>
+                            <div class="chart-value">NT$ 31,500</div>
+                        </div>
+                        
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 20%; background-color: #6b7280;">
+                                機構分潤
+                            </div>
+                            <div class="chart-label">機構分潤 (20%)</div>
+                            <div class="chart-value">NT$ 9,000</div>
+                        </div>
+                        
+                        <div style="position: relative; height: 24px; width: 100%; margin-bottom: 32px;">
+                            <div class="chart-bar" style="width: 10%; background-color: #6b7280;">
+                                場地分潤
+                            </div>
+                            <div class="chart-label">場地分潤 (10%)</div>
+                            <div class="chart-value">NT$ 4,500</div>
+                        </div>
+                    </div>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>月份</th>
+                                <th>總收入</th>
+                                <th>老師分潤</th>
+                                <th>機構分潤</th>
+                                <th>場地分潤</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023年10月</td>
+                                <td>NT$ 45,000</td>
+                                <td>NT$ 31,500</td>
+                                <td>NT$ 9,000</td>
+                                <td>NT$ 4,500</td>
+                            </tr>
+                            <tr>
+                                <td>2023年9月</td>
+                                <td>NT$ 42,000</td>
+                                <td>NT$ 29,400</td>
+                                <td>NT$ 8,400</td>
+                                <td>NT$ 4,200</td>
+                            </tr>
+                            <tr>
+                                <td>2023年8月</td>
+                                <td>NT$ 38,000</td>
+                                <td>NT$ 26,600</td>
+                                <td>NT$ 7,600</td>
+                                <td>NT$ 3,800</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3 class="font-semibold" style="margin-bottom: 12px;">分潤明細</h3>
+                    <div style="background-color: #f9fafb; padding: 12px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>課程總收入：</span>
+                            <span style="font-weight: 500;">NT$ 45,000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #2563eb;">
+                            <span>老師分潤 (70%)：</span>
+                            <span style="font-weight: 500;">NT$ 31,500</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #6b7280;">
+                            <span>機構分潤 (20%)：</span>
+                            <span>NT$ 9,000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: #6b7280;">
+                            <span>場地分潤 (10%)：</span>
+                            <span>NT$ 4,500</span>
+                        </div>
+                        <hr style="margin: 8px 0;">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; color: #059669;">
+                            <span>實際收入：</span>
+                            <span>NT$ 31,500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Settings Page -->
@@ -737,8 +1279,134 @@
         </div>
     </div>
 
+    <!-- 課程編輯 Modal -->
+    <div class="modal-overlay" id="courseEditModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="font-semibold" id="courseEditTitle">編輯課程</h3>
+                <button onclick="hideModal('courseEditModal')" style="background: none; border: none; color: #6b7280; cursor: pointer;">
+                    <span style="font-size: 20px;">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">課程名稱 *</label>
+                    <input type="text" class="form-input" id="courseNameInput" placeholder="請輸入課程名稱">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">課程類型 *</label>
+                    <select class="form-input">
+                        <option>線上課程</option>
+                        <option selected>線下團體班</option>
+                        <option>一對一輔導</option>
+                    </select>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">課程價格 (NT$) *</label>
+                        <input type="number" class="form-input" placeholder="請輸入價格">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">人數上限 *</label>
+                        <input type="number" class="form-input" placeholder="請輸入人數上限">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">上課地點 *</label>
+                    <input type="text" class="form-input" placeholder="請輸入上課地點">
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">開始日期 *</label>
+                        <input type="date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">結束日期 *</label>
+                        <input type="date" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">課程描述</label>
+                    <textarea class="form-input" style="height: 100px;" placeholder="請輸入課程描述..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">課程封面圖片</label>
+                    <div class="upload-area">
+                        <span style="font-size: 24px; margin-bottom: 8px; display: block;">📷</span>
+                        <p class="text-sm">點擊上傳照片</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">課程狀態</label>
+                    <select class="form-input">
+                        <option>草稿</option>
+                        <option selected>已上架</option>
+                        <option>已結束</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('courseEditModal')">取消</button>
+                <button class="btn btn-primary">儲存變更</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 銀行帳號設定 Modal -->
+    <div class="modal-overlay" id="bankModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="font-semibold">銀行帳號設定</h3>
+                <button onclick="hideModal('bankModal')" style="background: none; border: none; color: #6b7280; cursor: pointer;">
+                    <span style="font-size: 20px;">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">銀行名稱 *</label>
+                    <select class="form-input">
+                        <option>選擇銀行</option>
+                        <option selected>中國信託</option>
+                        <option>富邦銀行</option>
+                        <option>玉山銀行</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">帳號 *</label>
+                    <input type="text" class="form-input" placeholder="請輸入帳號" value="123-456-789012">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">戶名 *</label>
+                    <input type="text" class="form-input" placeholder="請輸入戶名" value="張老師">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">戶頭影本</label>
+                    <div class="upload-area">
+                        <span style="font-size: 24px; margin-bottom: 8px; display: block;">📤</span>
+                        <p class="text-sm">點擊上傳戶頭影本</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('bankModal')">取消</button>
+                <button class="btn btn-primary">儲存變更</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentPage = 'profile';
+        let currentTab = 'incomeTab';
 
         function toggleMenu() {
             const menu = document.getElementById('sideMenu');
@@ -803,6 +1471,53 @@
         function hideRegistration() {
             document.getElementById('profileView').classList.remove('hidden');
             document.getElementById('registrationView').classList.add('hidden');
+        }
+
+        function showTab(tabId) {
+            // Hide all tabs
+            const tabs = ['incomeTab', 'settlementTab'];
+            tabs.forEach(tab => {
+                document.getElementById(tab).classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Update tab navigation
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach((tab, index) => {
+                if (tabs[index] === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            currentTab = tabId;
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showCourseModal() {
+            document.getElementById('courseEditTitle').textContent = '新增課程';
+            document.getElementById('courseNameInput').value = '';
+            showModal('courseEditModal');
+        }
+
+        function showCourseEditModal(courseName) {
+            document.getElementById('courseEditTitle').textContent = '編輯課程';
+            document.getElementById('courseNameInput').value = courseName;
+            showModal('courseEditModal');
+        }
+
+        function showBankModal() {
+            showModal('bankModal');
         }
 
         // Initialize the app
